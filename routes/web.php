@@ -1,21 +1,34 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\ClientController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-//Pour afficher le formulaire de creation d'un client
-Route::get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
+Route::get('/dashboard', [App\Http\Controllers\ContractController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-//Route pour recevoir les données du formulaire
-Route::post('clients', [ClientController::class, 'store'])->name('clients.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-Route::get('/contracts/create', [ContractController::class, 'create'])->name('contracts.create');
-Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
-Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.index');
-Route::get('/clients/{client}', [App\Http\Controllers\ClientController::class, 'show'])->name('clients.show');
-Route::delete('/contracts/{contract}', [ContractController::class, 'destroy'])->name('contracts.destroy');
+require __DIR__.'/auth.php';
+
+Route::middleware(['auth'])->group(function () {
+
+    //Tableau de bord
+    Route::get('/dashboard', [ContractController::class, 'index'])->name('dashboard');
+
+    //Tes ressources
+    Route::resource('contracts', ContractController::class);
+    Route::resource('clients', ClientController::class);
+});
+
+require __DIR__.'/auth.php';
