@@ -1,36 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Nouveau Contrat - TEST</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-
-    <nav class="bg-indigo-700 p-4 mb-8 shadow-lg text-white">
-        <div class="max-w-6xl mx-auto flex justify-between items-center px-4">
-            <div class="font-bold text-xl tracking-wider uppercase">AssurCRM</div>
-            
-            <div class="flex items-center space-x-6 text-sm">
-                <a href="{{ route('contracts.index') }}" class="hover:text-indigo-200">Portefeuille</a>
-                <a href="{{ route('clients.create') }}" class="hover:text-indigo-200">Nouveau Client</a>
-                <a href="{{ route('contracts.create') }}" class="text-indigo-200 border-b-2 border-indigo-200 pb-1">Nouveau Contrat</a>
-                
-                <div class="flex items-center border-l border-indigo-500 pl-6 ml-2">
-                    <span class="mr-4 text-indigo-200 italic">{{ Auth::user()->firstname ?? Auth::user()->name }}</span>
-                    
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="bg-indigo-800 hover:bg-red-600 px-3 py-1 rounded transition text-xs font-bold uppercase">
-                            Déconnexion
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md border border-gray-200">
+<x-app-layout>
+       <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md border border-gray-200">
         <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
             <span class="bg-indigo-100 text-indigo-700 p-2 rounded-lg mr-3">📄</span>
             Souscrire un nouveau contrat
@@ -92,5 +61,4 @@
             </button>
         </form>
     </div>
-</body>
-</html>
+</x-app-layout>

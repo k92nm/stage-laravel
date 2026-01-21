@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>AssurCRM</title>
+    <title>Test Assurance</title>
 </head>
 <body class="bg-gray-100">
     <nav class="bg-indigo-700 p-4 text-white shadow-lg">
         <div class="max-w-6xl mx-auto flex justify-between items-center px-4">
             <a href="{{ route('contracts.index') }}" class="font-bold text-xl uppercase tracking-wider">
-                AssurCRM
+                Test Assurance
             </a>
             
             <div class="flex items-center space-x-6 text-sm font-medium">
-                <a href="{{ route('contracts.index') }}" class="text-indigo-200 border-b-2 border-indigo-200 pb-1">Portefeuille</a>
+                <a href="{{ route('contracts.index') }}" class="hover:text-indigo-200">Portefeuille</a>
                 
                 <a href="{{ route('clients.create') }}" class="hover:text-indigo-200">Nouveau Client</a>
                 <a href="{{ route('contracts.create') }}" class="hover:text-indigo-200">Nouveau Contrat</a>

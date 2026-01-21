@@ -20,6 +20,21 @@
             </div>
         </div>
 
+        @if($urgences > 0)
+        <div class="mb-6 bg-orange-50 border border-orange-400 p-4 rounded-xl shadow-sm flex items-center justify-between">
+            <div class="flex items-center">
+                <span class="text-2xl mr-3">🔔</span>
+                <div>
+                    <h3 class="text-orange-800 font-bold">Action Requise</h3>
+                    <p class="text-orange-700 text-sm">Vous avez <strong>{{ $urgences }} contract(s) qui vont expirer dans moins de 30 jours.</p>
+                </div>
+            </div>
+            <span class="text-xs font-black uppercase text-orange-400 tracking-widest">Urgent</span>
+        </div>
+        @endif
+
+        
+        
         <div class="mb-8">
             <form action="{{ route('contracts.index') }}" method="GET" class="flex gap-2">
                 <div class="relative flex-1">
@@ -38,6 +53,7 @@
                 @endif
             </form>
         </div>
+
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <table class="w-full text-left border-collapse">
@@ -64,10 +80,28 @@
                             {{ $contract->type }}
                         </td>
                         <td class="p-5 text-sm">
-                            @php $isExpired = \Carbon\Carbon::parse($contract->end_date)->isPast(); @endphp
-                            <span class="{{ $isExpired ? 'text-red-500 font-bold' : '' }}">
-                                {{ \Carbon\Carbon::parse($contract->end_date)->format('d/m/Y') }}
-                            </span>
+                            @php
+                                $endDate = \Carbon\Carbon::parse($contract->end_date);
+                                $now = \Carbon\Carbon::now();
+                                $diffInDays = $now->diffInDays($endDate, false); // false pour avoir un nombre négatif si expiré
+                            @endphp
+
+                            @if($diffInDays < 0)
+                                <span class="flex items-center text-red-600 font-black">
+                                    <span class="h-2 w-2 rounded-full bg-red-600 animate-pulse mr-2"></span>
+                                    Expiré ({{ abs($diffInDays) }} j)
+                                </span>
+                            @elseif($diffInDays <= 30)
+                                <span class="flex items-center text-orange-500 font-bold">
+                                    <span class="h-2 w-2 rounded-full bg-orange-500 mr-2"></span>
+                                    J-{{ floor($diffInDays) }} (À renouveler)
+                                </span>
+                            @else
+                                <span class="flex items-center text-green-600">
+                                    <span class="h-2 w-2 rounded-full bg-green-600 mr-2"></span>
+                                    {{ $endDate->format('d/m/Y') }}
+                                </span>
+                            @endif
                         </td>
                         <td class="p-5 text-right font-mono font-bold text-indigo-700">
                             {{ number_format($contract->premium_amount, 2, ',', ' ') }} €

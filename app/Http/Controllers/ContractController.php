@@ -58,7 +58,18 @@ class ContractController extends Controller
     $countContracts = $contracts->count();
     $countClients = \App\Models\Client::count();
 
-    return view('contracts.index', compact('contracts', 'totalPrimes', 'countContracts', 'countClients'));
+    // Calculer le nombre de contrats qui expirent dans moins de 30 jours
+    $urgences = Contract::where('end_date', '<=', now()->addDays(30))
+                        ->where('end_date', '>=', now())
+                        ->count();
+
+    $statsCompagnies = Contract::select('company_name', \DB::raw('sum(premium_amount) as total'))
+                        ->groupBy('company_name')
+                        ->orderBy('total', 'desc')
+                        ->get();
+
+    return view('contracts.index', compact('contracts', 'totalPrimes', 'countContracts', 'countClients', 'urgences', 'statsCompagnies'));
+
 }
 
 public function destroy(Contract $contract)
