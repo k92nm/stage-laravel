@@ -17,16 +17,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-require __DIR__.'/auth.php';
-
-Route::middleware(['auth'])->group(function () {
-
-    //Tableau de bord
+    // Tableau de bord
     Route::get('/dashboard', [ContractController::class, 'index'])->name('dashboard');
 
-    //Tes ressources
+    // Ressources métier
     Route::resource('contracts', ContractController::class);
     Route::resource('clients', ClientController::class);
 });

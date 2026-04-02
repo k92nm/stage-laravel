@@ -62,6 +62,7 @@
                         <th class="p-5">Client</th>
                         <th class="p-5">Compagnie</th>
                         <th class="p-5">Type</th>
+                        <th class="p-5">Garanties</th>
                         <th class="p-5">Échéance</th>
                         <th class="p-5 text-right">Prime</th>
                         <th class="p-5 text-center">Actions</th>
@@ -78,6 +79,17 @@
                         <td class="p-5 text-gray-500">{{ $contract->company_name }}</td>
                         <td class="p-5 text-xs font-bold uppercase tracking-tighter text-gray-400">
                             {{ $contract->type }}
+                        </td>
+                        <td class="p-5 text-xs text-gray-600">
+                            @if($contract->garanties->isEmpty())
+                                <span class="text-gray-400 italic">Aucune</span>
+                            @else
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach($contract->garanties as $garantie)
+                                        <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-semibold">{{ $garantie->label }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
                         </td>
                         <td class="p-5 text-sm">
                             @php
@@ -107,21 +119,27 @@
                             {{ number_format($contract->premium_amount, 2, ',', ' ') }} €
                         </td>
                         <td class="p-5 text-center">
-                            <form action="{{ route('contracts.destroy', $contract->id) }}" method="POST" 
-                                  onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce contrat ?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-400 hover:text-red-600 transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            <div class="flex items-center justify-center gap-3">
+                                <a href="{{ route('contracts.edit', $contract->id) }}" class="text-indigo-500 hover:text-indigo-700 transition" title="Modifier">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-7 14h12a2 2 0 002-2V7a2 2 0 00-2-2h-3.5a1 1 0 01-.707-.293l-1-1A1 1 0 0012.086 3h-2.172a1 1 0 00-.707.293l-1 1A1 1 0 017.5 5H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
-                                </button>
-                            </form>
+                                </a>
+                                <form action="{{ route('contracts.destroy', $contract->id) }}" method="POST" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce contrat ?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-400 hover:text-red-600 transition" title="Supprimer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="p-20 text-center text-gray-300 italic">
+                        <td colspan="7" class="p-20 text-center text-gray-300 italic">
                             Aucun contrat trouvé.
                         </td>
                     </tr>

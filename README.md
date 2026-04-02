@@ -1,59 +1,107 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AssurCRM - Documentation Projet (Laravel)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application web de gestion de clients et de contrats d'assurance, preparee pour une demonstration E6.
 
-## About Laravel
+## 1. Objectif
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+AssurCRM permet de:
+- gerer des clients,
+- creer, modifier et supprimer des contrats,
+- associer des garanties a un contrat (relation N,N),
+- suivre rapidement les echeances et les indicateurs metier.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 2. Stack technique
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Back-end: PHP 8.2, Laravel 12
+- Front-end: Blade, Tailwind CSS, Alpine.js
+- Build assets: Vite
+- Base de donnees locale: SQLite (configuration actuelle)
+- Authentification: Laravel Breeze
 
-## Learning Laravel
+## 3. Installation rapide
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Prerequis
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP >= 8.2
+- Composer
+- Node.js + npm
 
-## Laravel Sponsors
+### Commandes
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm install
+npm run build
+php artisan serve
+```
 
-### Premium Partners
+Application disponible sur:
+- http://127.0.0.1:8000
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 4. Lancement en developpement
 
-## Contributing
+Pour lancer serveur + logs + Vite en une commande:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer run dev
+```
 
-## Code of Conduct
+## 5. Parcours fonctionnel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Se connecter (routes Breeze).
+2. Creer un client.
+3. Creer un contrat rattache au client.
+4. Selectionner une ou plusieurs garanties sur le contrat.
+5. Verifier le tableau de bord: stats, recherche, echeances.
+6. Modifier puis supprimer un contrat.
 
-## Security Vulnerabilities
+## 6. Modele de donnees
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Relations
 
-## License
+- Client 1,N Contract
+- Contract N,N Garantie (table pivot contract_garantie)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Tables principales
+
+- clients
+- contracts
+- garanties
+- contract_garantie
+
+## 7. Regles metier implementees
+
+- email client unique,
+- numero de police unique,
+- date de fin > date de debut,
+- client obligatoire pour creer un contrat,
+- suppression en cascade des contrats lors de la suppression d'un client.
+
+## 8. Structure de code utile pour l'oral
+
+- routes/web.php
+- app/Http/Controllers/ContractController.php
+- app/Http/Controllers/ClientController.php
+- app/Models/Client.php
+- app/Models/Contract.php
+- app/Models/Garantie.php
+- database/migrations/2025_12_25_211335_create_contracts_table.php
+- database/migrations/2026_03_30_100000_create_garanties_table.php
+- database/migrations/2026_03_30_100100_create_contract_garantie_table.php
+
+## 9. Commandes utiles
+
+```bash
+# lancer les tests
+php artisan test
+
+# nettoyer les caches
+php artisan optimize:clear
+
+# relancer les migrations proprement
+php artisan migrate:fresh
+```
+

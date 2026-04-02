@@ -25,4 +25,9 @@ class Contract extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function garanties()
+    {
+        return $this->belongsToMany(Garantie::class, 'contract_garantie')->withTimestamps();
+    }
 }
